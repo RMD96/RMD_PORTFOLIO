@@ -55,12 +55,10 @@ window.addEventListener('load', function() {
 /***************** Animations ******************/
 
 var elements = document.querySelectorAll('.fade-in-element');
-console.log('Connected to the HTML. Found elements:', elements);
-
-var isScrolling = false;
 
 function animateElements() {
-  elements.forEach(function(element) {
+  console.log('Animate elements function called');
+  elements.forEach(function (element) {
     if (isElementInViewport(element) && !element.classList.contains('animate')) {
       element.classList.add('animate');
       console.log('Adding animate class to element:', element);
@@ -68,38 +66,22 @@ function animateElements() {
   });
 }
 
-
 function isElementInViewport(element) {
   var rect = element.getBoundingClientRect();
-  var isInViewport = (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  return (
+    rect.bottom > 0 &&
+    rect.right > 0 &&
+    rect.left < (window.innerWidth || document.documentElement.clientWidth) &&
+    rect.top < (window.innerHeight || document.documentElement.clientHeight)
   );
-  console.log('Element:', element, 'is in viewport:', isInViewport);
-  return isInViewport;
 }
 
-function handleScroll() {
-  if (!isScrolling) {
-    setTimeout(function() {
-      elements.forEach(function(element) {
-        if (!element.classList.contains('animate') && isElementInViewport(element)) {
-          element.classList.add('animate');
-          console.log('Adding animate class to element:', element);
-        }
-      });
-      isScrolling = false;
-    }, 100); // Adjust the delay as needed
-    isScrolling = true;
-  }
-}
+window.addEventListener('scroll', animateElements);
+window.addEventListener('resize', animateElements);
 
-window.addEventListener('scroll', handleScroll);
-window.addEventListener('resize', handleScroll);
-
+// Call animateElements initially to handle elements in viewport on page load
 animateElements();
+
 
   /***************** Work Carousel ******************/
 
